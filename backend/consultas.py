@@ -10,6 +10,9 @@ def formato(respuesta):
 
 
 def select_by_id_omdb(id_omdb: str):
+    """
+    Get de los comentarios en la BBDD filtrando por el id de omdb
+    """
     conexionSelectBy = Conexion(f"SELECT * FROM comment WHERE id_omdb='{id_omdb}';")
     respuesta = conexionSelectBy.res
     resp = formato(respuesta)
@@ -18,11 +21,12 @@ def select_by_id_omdb(id_omdb: str):
 
 
 def insert_data(data):
+    """
+    Inserta un comentario en la BBDD
+    """
     try:
         conexionInsert = Conexion(
-            'INSERT INTO comment(id_omdb,nombre,comment,fecha) VALUES (?,?,?,?);',
-            data,
-        )
+            'INSERT INTO comment(id_omdb,nombre,comment,fecha) VALUES (?,?,?,?);',data)
         conexionInsert.res
         conexionInsert.con.commit()
     except sqlite3.Error as error:

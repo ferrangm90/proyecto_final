@@ -2,9 +2,18 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import model
 import consultas
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],      # Permite cualquier origen (dominio)
+    allow_credentials=False,  # ¡ATENCIÓN! Debe ser False si usas "*" en origins
+    allow_methods=["*"],      # Permite todos los métodos HTTP (GET, POST, PUT, etc.)
+    allow_headers=["*"],      # Permite todas las cabeceras HTTP
+)
 
 # plantilla pydantic
 class ModelComentario(BaseModel):
@@ -31,9 +40,5 @@ def comentarios_por_pelicula(id_omdb: str):
 
 @app.post("/comentarios", tags=['Comentarios'])
 def comentario_registro(body: ModelComentario):
-    try:
-        consultas.insert_data([body.id_omdb, body.nombre, body.comment, body.fecha])
-        return {'mensaje': 'Comentario publicado correctamente'}
-    except Exception as ex:
-        print(ex)
-        return {'error': 'ha fallado el registro'}
+    consultas.insert_data([body.id_omdb, body.nombre, body.comment, body.fecha])
+    return {'mensaje': 'registro correcto'}

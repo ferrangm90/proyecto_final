@@ -3,6 +3,9 @@ import sqlite3
 
 
 def formato(respuesta):
+    """
+    Pasa la respuesta de la BBDD a una lista de diccionarios
+    """
     lista_final = []
     for fila in respuesta.fetchall():
         lista_final.append(dict(fila))

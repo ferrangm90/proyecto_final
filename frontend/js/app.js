@@ -89,13 +89,14 @@ function capturarItemTabla() {
     }
 }
 
-// Llama a mostrar detalles y comentarios de la peli seleccionada
+// Llama a mostrar detalles y comentarios de la peli seleccionada y valoración
 function cargarDetallePelicula(idOmdb) {
     fetch(`${urlBase}/peliculas/detalle/${idOmdb}`)
         .then(response => response.json())
         .then(pelicula => {
             pintarDetallePelicula(pelicula);
-            cargarComentarios(pelicula.imdbID);
+            cargarComentarios(pelicula.imdbID);// carga los comentarios
+            cargarCalificaciones(pelicula.imdbID);// carga la valoracion
         })
         .catch(error => console.log("Error al cargar detalles: ",error));
 }
@@ -153,15 +154,68 @@ function altaComentario() {
     .catch(error => console.log("Error al guardar comentario: ",error));
 }
 
-// Limpia el formulario de comentario
+// Limpia el formulario comentaio
 function limpiarFormularioComentario() {
     document.getElementById('nombre').value = '';
     document.getElementById('comentario').value = '';
 }
 
-// Botones de buscar y guardar comentario
+// Carga el promedio de calificaciones
+function cargarCalificaciones(idOmdb) {
+    const contenedorEstrellas = document.getElementById('promedio-estrellas');
+
+    fetch(`${urlBase}/calificaciones/${idOmdb}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.total === 0) {
+                contenedorEstrellas.innerText = "Sin valoraciones aún";
+                return;
+            }
+            contenedorEstrellas.innerText = `★ ${data.promedio} / 5`;
+        })
+        .catch(error => console.log("Error al cargar calificaciones: ", error));
+}
+
+// Guarda una nueva calificación
+function altaCalificacion() {
+    const idOmdb = document.getElementById('detalle-id-omdb').value;
+    const nombre = document.getElementById('nombre-calificacion').value;
+    const puntuacion = document.getElementById('puntuacion').value;
+
+    if (nombre === "") {
+        alert("Tienes que rellenar tu nombre para calificar");
+        return;
+    }
+
+    const fechaHoy = new Date().toISOString().split('T')[0];
+
+    fetch(`${urlBase}/calificaciones`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id_omdb: idOmdb,
+            nombre: nombre,
+            calificacion: parseInt(puntuacion),
+            fecha: fechaHoy
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Calificación guardada correctamente");
+        document.getElementById('nombre-calificacion').value = '';
+        cargarCalificaciones(idOmdb);
+    })
+    .catch(error => console.log("Error al guardar calificación: ", error));
+}
+
+// Botones
 let btnBuscar = document.getElementById('btnBuscar');
 btnBuscar.addEventListener('click', buscarPeliculas);
 
 let btnGuardarComentario = document.getElementById('btnGuardarComentario');
 btnGuardarComentario.addEventListener('click', altaComentario);
+
+let btnGuardarCalificacion = document.getElementById('btnGuardarCalificacion');
+btnGuardarCalificacion.addEventListener('click', altaCalificacion);

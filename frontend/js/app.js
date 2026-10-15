@@ -1,6 +1,7 @@
 console.log("javascript cargado");
 const urlBase = 'http://127.0.0.1:8000';
 
+// RESULTADOS DE BUSQUEDA
 // Crea la tabla de resultados
 function generarFilasTabla(data) {
     let filas = '';
@@ -15,36 +16,6 @@ function generarFilasTabla(data) {
     });
 
     return filas;
-}
-
-// Muestra los detalles de la peli seleccionada
-function pintarDetallePelicula(pelicula) {
-    // quito el mensaje y muestro el contenido
-    document.getElementById('mensaje').style.display = 'none';
-    document.getElementById('contenido').style.display = 'block';
-
-    document.getElementById('detalle-id-omdb').value = pelicula.imdbID;
-    document.getElementById('detalle-id-texto').innerText = pelicula.imdbID;
-    document.getElementById('detalle-titulo').innerText = pelicula.Title;
-    document.getElementById('detalle-year').innerText = pelicula.Year;
-    document.getElementById('detalle-genre').innerText = pelicula.Genre;
-    document.getElementById('detalle-plot').innerText = pelicula.Plot;
-    document.getElementById('detalle-caratula').src = pelicula.Poster;
-}
-
-// Muestra los comentarios
-function generarHTMLComentarios(listaComentarios) {
-    let html = '';
-    listaComentarios.forEach(item => {
-        html += `
-        <div class="card mb-2 p-3">
-            <strong>${item.nombre}</strong> 
-            <i>${item.fecha}</i>
-            <p>${item.comment}</p>
-        </div>
-        `;
-    });
-    return html;
 }
 
 // Busca pelis segun el titulo y por fecha
@@ -76,6 +47,7 @@ function buscarPeliculas() {
         .catch(error => console.log("Error al buscar películas: ",error));
 }
 
+// RESULTADO DE DETALLES
 // Captura el clic en la tabla de resultados
 function capturarItemTabla() {
     const tabla = document.getElementById("tabla");
@@ -87,6 +59,21 @@ function capturarItemTabla() {
             cargarDetallePelicula(idOmdb);
         };
     }
+}
+
+// Muestra los detalles de la peli seleccionada
+function pintarDetallePelicula(pelicula) {
+    // quito el mensaje y muestro el contenido
+    document.getElementById('mensaje').style.display = 'none';
+    document.getElementById('contenido').style.display = 'block';
+
+    document.getElementById('detalle-id-omdb').value = pelicula.imdbID;
+    document.getElementById('detalle-id-texto').innerText = pelicula.imdbID;
+    document.getElementById('detalle-titulo').innerText = pelicula.Title;
+    document.getElementById('detalle-year').innerText = pelicula.Year;
+    document.getElementById('detalle-genre').innerText = pelicula.Genre;
+    document.getElementById('detalle-plot').innerText = pelicula.Plot;
+    document.getElementById('detalle-caratula').src = pelicula.Poster;
 }
 
 // Llama a mostrar detalles y comentarios de la peli seleccionada y valoración
@@ -101,8 +88,8 @@ function cargarDetallePelicula(idOmdb) {
         .catch(error => console.log("Error al cargar detalles: ",error));
 }
 
-
-// Muestra los comentarios de la peli seleccionada
+// COMENTARIOS
+// Carga los comentarios de la peli seleccionada
 function cargarComentarios(idOmdb) {
     const contenedor = document.getElementById('lista-comentarios');
 
@@ -118,7 +105,20 @@ function cargarComentarios(idOmdb) {
         })
         .catch(error => console.log("Error al cargar comentarios: ",error));
 }
-
+// Muestra los comentarios
+function generarHTMLComentarios(listaComentarios) {
+    let html = '';
+    listaComentarios.forEach(item => {
+        html += `
+        <div class="card mb-2 p-3">
+            <strong>${item.nombre}</strong> 
+            <i>${item.fecha}</i>
+            <p>${item.comment}</p>
+        </div>
+        `;
+    });
+    return html;
+}
 // Gestiona los comentarios nuevos
 function altaComentario() {
     const idOmdb = document.getElementById('detalle-id-omdb').value;
@@ -160,6 +160,7 @@ function limpiarFormularioComentario() {
     document.getElementById('comentario').value = '';
 }
 
+// CALIFICACIONES
 // Carga el promedio de calificaciones
 function cargarCalificaciones(idOmdb) {
     const contenedorEstrellas = document.getElementById('promedio-estrellas');
@@ -171,7 +172,7 @@ function cargarCalificaciones(idOmdb) {
                 contenedorEstrellas.innerText = "Sin valoraciones aún";
                 return;
             }
-            contenedorEstrellas.innerText = `★ ${data.promedio} / 5`;
+            contenedorEstrellas.innerText = `⭐ ${data.promedio} / 5`;
         })
         .catch(error => console.log("Error al cargar calificaciones: ", error));
 }
@@ -210,12 +211,13 @@ function altaCalificacion() {
     .catch(error => console.log("Error al guardar calificación: ", error));
 }
 
-// Botones
+// BOTONES
+// Boton de buscar
 let btnBuscar = document.getElementById('btnBuscar');
 btnBuscar.addEventListener('click', buscarPeliculas);
-
+// Boton de guardar comentario
 let btnGuardarComentario = document.getElementById('btnGuardarComentario');
 btnGuardarComentario.addEventListener('click', altaComentario);
-
+// Boton de guardar calificacion
 let btnGuardarCalificacion = document.getElementById('btnGuardarCalificacion');
 btnGuardarCalificacion.addEventListener('click', altaCalificacion);

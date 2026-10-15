@@ -2,7 +2,7 @@
 
 ## Aplicación web de búsqueda de películas y comentarios con FastAPI y SQLite
 
-He aprovechado este proyecto de buscador de películas para hacer tributo a la mítica página de películas "Películas Yonkis". Permite realizar búsquedas de películas consumiendo la API externa de OMDb, visualizar los detalles completos de cada título y gestionar comentarios guardados en una base de datos local SQLite.
+He aprovechado este proyecto de buscador de películas para hacer tributo a la mítica página de películas "Películas Yonkis". Permite realizar búsquedas de películas consumiendo la API externa de OMDb, visualizar los detalles completos de cada título y gestionar comentarios y calificaciones guardadas en una base de datos local SQLite.
 
 ## Funcionalidades cumplidas en la aplicación
 
@@ -11,6 +11,9 @@ He aprovechado este proyecto de buscador de películas para hacer tributo a la m
 3. **Gestión de comentarios:**
    - Consulta de comentarios guardados para cada película concreta.
    - Formulario para publicar nuevos comentarios que se almacenan automáticamente en la base de datos SQLite con la fecha actual.
+4. **Gestión de calificaciones:**
+   - Calcula el promedio de las calificaciones para cada película.
+   - Formulario para publicar nuevas calificaciones que se almacenan en la base de datos SQLite.
 
 ## Estructura del proyecto
 
